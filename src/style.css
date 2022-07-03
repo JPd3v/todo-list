@@ -1,0 +1,33 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.app-container{
+    display:grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 100vh;
+}
+
+.sidebar{
+    background-color:rgb(161, 225, 255);
+    border: 1px black solid;
+}
+
+.main-container{
+    background-color:rgb(161, 225, 255);
+}
+
+.task{
+    background-color: azure;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 8fr 1fr;
+    align-items: center;
+}
+
+.task-date{
+    grid-column: 2/3;
+    grid-row: 1/3;
+}
