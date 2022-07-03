@@ -34,7 +34,7 @@ function createTaskForm() {
     description.placeholder = "Description"
     dueDate.type = "date"
 
-    buttonCreateTask.addEventListener("click",() =>{
+    buttonCreateTask.addEventListener("click", () => {
         createNewTask(title.value, description.value, dueDate.value)
     })
     buttonCreateTask.classList.add("create-task")
@@ -60,8 +60,8 @@ function cancelTaskForm() {
     createNewButton()
 }
 
-function createNewTask(title,description,dueDate) {
-    pubsub.publish("createNewTask", submitForm(title,description,dueDate))
+function createNewTask(title, description, dueDate) {
+    pubsub.publish("createNewTask", submitForm(title, description, dueDate))
     deleteTaskForm()
     createNewButton()
 }
@@ -72,13 +72,33 @@ function submitForm(title, description, dueDate) {
 
 pubsub.subscribe("taskListAdd", rederTaskList)
 function rederTaskList(array) {
-    console.log(array)
-    for (const element in array) {
-        console.log(element.title)
+    console.log(array[0].title)
+    for (const element of array) {
+        appendNewTask(element.title,element.description,element.dueDate)
     }
 }
 
+function appendNewTask(tit,desc,date) {
+    let divContainer = document.createElement('div')
+    let title = document.createElement("div")
+    let description = document.createElement("div")
+    let dueDate = document.createElement("div")
+
+    divContainer.classList.add("task")
+    title.textContent= tit
+    description.textContent= desc
+    dueDate.textContent=date
+
+
+    mainContainer.appendChild(divContainer)
+    divContainer.appendChild(title)
+    divContainer.appendChild(description)
+    divContainer.appendChild(dueDate)
+    
+}
+
 export {
-    createNewButton
+    createNewButton,
+    rederTaskList
 }
 
