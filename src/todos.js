@@ -8,8 +8,6 @@ export default class Todo {
     }
 }
 
-
-
 let tasksList = []
 
 pubsub.subscribe("createNewTask", addTaskToList)
@@ -19,3 +17,4 @@ function addTaskToList({ title, description, dueDate }) {
     console.log(tasksList)
     pubsub.publish("taskListAdd",tasksList)
 }
+

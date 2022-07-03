@@ -6,5 +6,3 @@ import { pubsub } from "./pubSub"
 
 createNewButton()
 
-
-
