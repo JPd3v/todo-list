@@ -1,6 +1,7 @@
 import { pubsub } from "./pubSub"
 
 let mainContainer = document.querySelector(".main-container")
+let tasksContainer = document.querySelector(".tasks-container")
 
 function addNewTasks() {
     deleteButton()
@@ -72,7 +73,7 @@ function submitForm(title, description, dueDate) {
 
 pubsub.subscribe("taskListAdd", rederTaskList)
 function rederTaskList(array) {
-    console.log(array[0].title)
+    tasksContainer.innerHTML=""
     for (const element of array) {
         appendNewTask(element.title,element.description,element.dueDate)
     }
@@ -88,9 +89,10 @@ function appendNewTask(tit,desc,date) {
     title.textContent= tit
     description.textContent= desc
     dueDate.textContent=date
+    dueDate.classList.add("task-date")
 
 
-    mainContainer.appendChild(divContainer)
+    tasksContainer.appendChild(divContainer)
     divContainer.appendChild(title)
     divContainer.appendChild(description)
     divContainer.appendChild(dueDate)
