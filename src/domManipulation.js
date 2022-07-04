@@ -84,19 +84,38 @@ function appendNewTask(tit,desc,date) {
     let title = document.createElement("div")
     let description = document.createElement("div")
     let dueDate = document.createElement("div")
+    let deleteButton = document.createElement("button")
+
 
     divContainer.classList.add("task")
+    divContainer.setAttribute("title",tit)
     title.textContent= tit
+    title.classList.add("title")
     description.textContent= desc
     dueDate.textContent=date
     dueDate.classList.add("task-date")
+    deleteButton.textContent="X"
+
+    deleteButton.addEventListener("click",(e)=>{
+        deleteTodoTask(e)
+    })
 
 
     tasksContainer.appendChild(divContainer)
     divContainer.appendChild(title)
     divContainer.appendChild(description)
     divContainer.appendChild(dueDate)
+    divContainer.appendChild(deleteButton)
     
+    
+}
+
+function deleteTodoTask(e){
+    let item = e.target.closest(".task");
+    let name = item.title;
+    console.log(name)
+    pubsub.publish("deletedATodoTask",name)
+    item.remove()
 }
 
 export {
