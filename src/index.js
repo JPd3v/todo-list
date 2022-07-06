@@ -1,8 +1,9 @@
 import "./style.css"
-import todo from "./todos"
-import {createNewButton,addNewTasks} from "./domManipulation"
+import Task from "./task"
+import {createNewButton,createNewProjectButton} from "./domManipulation"
 import { pubsub } from "./pubSub"
+import ProjectList from "./projectList"
 
 
 createNewButton()
-
+createNewProjectButton()
