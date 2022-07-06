@@ -42,3 +42,6 @@
     width: fit-content;
 }
 
+.project{
+    cursor: pointer;
+}
