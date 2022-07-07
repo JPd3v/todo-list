@@ -56,7 +56,7 @@ function cancelProjectForm() {
 }
 
 function addNewProject() {
-    deleteButton("btn-add-project")
+    deleteDomElement("btn-add-project")
     addProjectForm()
 }
 
@@ -66,16 +66,17 @@ function deleteProjectForm() {
 }
 
 function addNewProjectAndCleanDom(title) {
-    pubsub.publish("createNewProject",title)
-    // addProject(title)
-    // deleteProjectForm()
+    pubsub.publish("createNewProject", title)
+
+    // createNewButton()
     createNewProjectButton()
 }
 
 function deleteProject(e) {
     let item = e.target.closest(".project");
     let title = item.dataset.title;
-    console.log(title)
+    tasksContainer.innerHTML = ""
+    // buttonTodoChecker()
     pubsub.publish("deletedAProject", title)
     item.remove()
 }
@@ -88,29 +89,21 @@ function rederprojectList(array) {
     }
 }
 
-pubsub.subscribe("projectList",assignProjectObject)
-function assignProjectObject(projectarray){
+pubsub.subscribe("projectList", assignProjectObject)
+function assignProjectObject(projectarray) {
     let domProjects = document.querySelectorAll(".project")
     let domProjectsArray = Array.from(domProjects)
-    
+
     for (let i = 0; i < projectarray.length; i++) {
-        domProjectsArray[i].addEventListener("click",()=>{
-            // alert(projectarray[i])
+        domProjectsArray[i].addEventListener("click", () => {
             console.log(projectarray[i])
-            console.log(projectarray[i].taskList)
-            console.log(projectarray[i].projects)
-            rederTaskList(projectarray[i].taskList)
-        }) ;
-        
-        
+            rederTaskList(projectarray[i].taskList, projectarray[i])
+        })
     }
-   
 }
 
-
-
 function addNewTasks() {
-    deleteButton("btn-add-todo")
+    deleteDomElement("btn-add-todo")
     createTaskForm()
 }
 
@@ -119,10 +112,10 @@ function createNewButton() {
     addButton.classList.add("btn-add-todo")
     addButton.textContent = "+ add a new task"
     addButton.addEventListener("click", addNewTasks)
-    mainContainer.appendChild(addButton)
+    tasksContainer.appendChild(addButton)
 }
 
-function deleteButton(buttonClass) {
+function deleteDomElement(buttonClass) {
     let addButton = document.querySelector(`.${buttonClass}`)
     addButton.remove()
 }
@@ -149,7 +142,7 @@ function createTaskForm() {
     buttonCancel.addEventListener("click", cancelTaskForm)
     buttonCancel.textContent = "Cancel"
 
-    mainContainer.appendChild(divContainer)
+    tasksContainer.appendChild(divContainer)
     divContainer.appendChild(title)
     divContainer.appendChild(description)
     divContainer.appendChild(dueDate)
@@ -170,20 +163,30 @@ function cancelTaskForm() {
 function createNewTask(title, description, dueDate) {
     pubsub.publish("createNewTask", submitForm(title, description, dueDate))
     deleteTaskForm()
+    appendNewTask(title, description, dueDate)
     createNewButton()
 }
 
 function submitForm(title, description, dueDate) {
-    return { title, description, dueDate }
+    let projectName = document.querySelector(".project-name").textContent
+    return { title, description, dueDate, projectName }
 }
 
-pubsub.subscribe("taskListAdd", rederTaskList)
-
-function rederTaskList(array) {
+function rederTaskList(array, project) {
     tasksContainer.innerHTML = ""
+    appendProjectName(project)
     for (const element of array) {
         appendNewTask(element.title, element.description, element.dueDate)
     }
+    createNewButton()
+}
+
+function appendProjectName(project) {
+    let projectName = document.createElement("h2")
+    projectName.classList.add("project-name")
+    projectName.textContent = project.name
+
+    tasksContainer.appendChild(projectName)
 }
 
 function appendNewTask(tit, desc, date) {
@@ -195,9 +198,9 @@ function appendNewTask(tit, desc, date) {
 
     divContainer.classList.add("task")
     divContainer.setAttribute("data-title", tit)
-    title.textContent = tit
+    title.textContent = `title: ${tit}`
     title.classList.add("title")
-    description.textContent = desc
+    description.textContent = `description: ${desc}`
     dueDate.setAttribute("type", "date")
     dueDate.value = date
     dueDate.classList.add("task-date")
@@ -215,19 +218,25 @@ function appendNewTask(tit, desc, date) {
 }
 
 function deleteTodoTask(e) {
+    let projectName = document.querySelector(".project-name").textContent
     let item = e.target.closest(".task");
     let name = item.dataset.title;
     console.log(name)
-    pubsub.publish("deletedATodoTask", name)
+    pubsub.publish("deletedATodoTask", { name, projectName })
     item.remove()
 }
 
-export {
-    createNewButton,
-    // rederTaskList,
-    createNewProjectButton
+function displayDefaultProject() {
+    let defaultProject = document.querySelector(".project")
+    defaultProject.click()
 }
 
-// publicar info de cuando se elimina una task de cierto proyecto
-// pubsub.publish("deletedATodoTaskInSomeProyect", {ProyectName,TaskName})
-// pubsub.publish("deletedATodoTaskInSomeProyect", {proyectlist[lugar array],TaskName})
+function renderOnload() {
+    displayDefaultProject()
+    createNewProjectButton()
+}
+
+export {
+    renderOnload
+}
+
