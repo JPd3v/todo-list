@@ -67,8 +67,6 @@ function deleteProjectForm() {
 
 function addNewProjectAndCleanDom(title) {
     pubsub.publish("createNewProject", title)
-
-    // createNewButton()
     createNewProjectButton()
 }
 
@@ -76,7 +74,6 @@ function deleteProject(e) {
     let item = e.target.closest(".project");
     let title = item.dataset.title;
     tasksContainer.innerHTML = ""
-    // buttonTodoChecker()
     pubsub.publish("deletedAProject", title)
     item.remove()
 }
@@ -96,7 +93,6 @@ function assignProjectObject(projectarray) {
 
     for (let i = 0; i < projectarray.length; i++) {
         domProjectsArray[i].addEventListener("click", () => {
-            console.log(projectarray[i])
             rederTaskList(projectarray[i].taskList, projectarray[i])
         })
     }
@@ -185,7 +181,6 @@ function appendProjectName(project) {
     let projectName = document.createElement("h2")
     projectName.classList.add("project-name")
     projectName.textContent = project.name
-
     tasksContainer.appendChild(projectName)
 }
 
@@ -206,6 +201,10 @@ function appendNewTask(tit, desc, date) {
     dueDate.classList.add("task-date")
     deleteButton.textContent = "X"
 
+    dueDate.addEventListener("change", (e) => {
+        editDueDate(e)
+    })
+
     deleteButton.addEventListener("click", (e) => {
         deleteTodoTask(e)
     })
@@ -217,11 +216,17 @@ function appendNewTask(tit, desc, date) {
     divContainer.appendChild(deleteButton)
 }
 
+function editDueDate(data) {
+    let name = document.querySelector(".project-name").textContent
+    let title = data.target.closest(".task").dataset.title
+    let dueDate = data.target.value
+    pubsub.publish("dueDateEdited", { name, title, dueDate })
+}
+
 function deleteTodoTask(e) {
     let projectName = document.querySelector(".project-name").textContent
     let item = e.target.closest(".task");
     let name = item.dataset.title;
-    console.log(name)
     pubsub.publish("deletedATodoTask", { name, projectName })
     item.remove()
 }

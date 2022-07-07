@@ -21,7 +21,6 @@ export default class ProjectList {
         pubsub.publish("projectList", this.projects)
         console.log(this.projects)
     }
-
 }
 
 let projectList = new ProjectList
@@ -45,6 +44,10 @@ pubsub.subscribe("createNewTask", ({ title, description, dueDate, projectName })
 
 pubsub.subscribe("deletedATodoTask", ({ name, projectName }) => {
     projectList.getProject(projectName).deleteTask(name)
+})
+
+pubsub.subscribe("dueDateEdited",({name,title,dueDate})=>{
+    projectList.getProject(name).getTask(title).editDueDate(dueDate)
 })
 
 
