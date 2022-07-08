@@ -13,6 +13,8 @@ function addProjectForm() {
 
     formContainer.classList.add("project-form")
     title.placeholder = "title"
+    acceptButton.classList.add("create-project-button")
+    cancelButton.classList.add("cancel-project-button")
     acceptButton.textContent = "create"
     cancelButton.textContent = "cancel"
 
@@ -66,6 +68,7 @@ function deleteProjectForm() {
 }
 
 function addNewProjectAndCleanDom(title) {
+    if (title.length ===0)return alert("Title required") 
     pubsub.publish("createNewProject", title)
     createNewProjectButton()
 }
@@ -157,6 +160,7 @@ function cancelTaskForm() {
 }
 
 function createNewTask(title, description, dueDate) {
+    if (title.length ===0)return alert("Title required") 
     pubsub.publish("createNewTask", submitForm(title, description, dueDate))
     deleteTaskForm()
     appendNewTask(title, description, dueDate)
