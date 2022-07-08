@@ -24,7 +24,7 @@ export default class ProjectList {
 }
 
 let projectList = new ProjectList
-projectList.addProject("hola")
+projectList.addProject("My Project")
 
 pubsub.subscribe("createNewProject", (title) => {
     projectList.addProject(title)
